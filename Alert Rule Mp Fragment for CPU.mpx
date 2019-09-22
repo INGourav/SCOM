@@ -1,0 +1,67 @@
+<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Monitoring>
+
+<!--This Mp is created to generate alert on windows servers CPU using alert rule not a monitor-->
+<!--Replace ##Frequency## as your time of sample ( in seconds) and ##Value## as a threshold (in percernt like if 90% then only type 90) on which you want to generate alert-->
+<!--Author Gourav Kumar for further reach me on gouravrathore23@gmail.com or gouravin@outlook.com-->
+
+    <Rules>
+      <Rule ID="Custom.Windows.OperatingSystem.PercentProcessorTime.AlertRule" Target="Windows!Microsoft.Windows.OperatingSystem" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>Alert</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="Perf!System.Performance.DataProvider">
+            <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+            <CounterName>% Processor Time</CounterName>
+            <ObjectName>Processor</ObjectName>
+            <InstanceName>_Total</InstanceName>
+            <AllInstances>false</AllInstances>
+            <Frequency>##Frequency##</Frequency>
+          </DataSource>
+        </DataSources>
+        <ConditionDetection ID="CD" TypeID="System!System.ExpressionFilter">
+          <Expression>
+            <SimpleExpression>
+              <ValueExpression>
+                <XPathQuery Type="Double">Value</XPathQuery>
+              </ValueExpression>
+              <Operator>GreaterEqual</Operator>
+              <ValueExpression>
+                <Value Type="Double">##Value##</Value>
+              </ValueExpression>
+            </SimpleExpression>
+          </Expression>
+        </ConditionDetection>
+        <WriteActions>
+          <WriteAction ID="Alert" TypeID="Health!System.Health.GenerateAlert">
+            <Priority>1</Priority>
+            <Severity>2</Severity>
+            <AlertMessageId>$MPElement[Name="Custom.Windows.OperatingSystem.PercentProcessorTime.AlertRule.AlertMessage"]$</AlertMessageId>
+            <AlertParameters>
+              <AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+              <AlertParameter2>$Data/Value$</AlertParameter2>
+            </AlertParameters>
+          </WriteAction>
+        </WriteActions>
+      </Rule>
+    </Rules>
+  </Monitoring>
+  <Presentation>
+    <StringResources>
+      <StringResource ID="Custom.Windows.OperatingSystem.PercentProcessorTime.AlertRule.AlertMessage" />
+    </StringResources>
+  </Presentation>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="Custom.Windows.OperatingSystem.PercentProcessorTime.AlertRule">
+          <Name>% Processor Time</Name>
+          <Description>This task generates alert when % Processor Time counter reaches the threshold.</Description>
+        </DisplayString>
+        <DisplayString ElementID="Custom.Windows.OperatingSystem.PercentProcessorTime.AlertRule.AlertMessage">
+          <Name>% Processor Time is too high.</Name>
+          <Description>% Processor Time counter has reached the threshold on the computer {0}. The value is {1}.</Description>
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPackFragment>
