@@ -1,3 +1,5 @@
+# https://social.technet.microsoft.com/Forums/en-US/06150795-6c94-4784-9132-8e5d725e0810/scom-2016-list-all-monitors-rules-for-a-given-agent-using-powershell?forum=operationsmanagergeneral#dacdf892-01ba-4602-a110-17bfab926198
+
 param (
 [Parameter(Mandatory=$true)][string]$computer,
 [Parameter(Mandatory=$true)][string]$scom
